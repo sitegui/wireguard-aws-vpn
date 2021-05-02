@@ -10,7 +10,6 @@ INSTANCE_IP=$2
 
 echo "Install packages"
 {
-sudo add-apt-repository -y ppa:wireguard/wireguard
 sudo apt-get update
 sudo apt-get install -y wireguard resolvconf
 } >> logs
