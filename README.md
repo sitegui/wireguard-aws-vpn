@@ -19,6 +19,7 @@ by default nowadays?
 6. Public subnet's IPv6 CIDR: Specify a custom IPv6 CIDR
 7. Create VPC
 
+## Create security group
 1. https://sa-east-1.console.aws.amazon.com/ec2/v2/home
 2. Security Groups
 3. Create Security Group
@@ -55,12 +56,24 @@ by default nowadays?
 1. Execute `./vpn.sh <the path to the secret key file> <the instance public IP>`
 2. When done, run `wg-quick down wg0` and terminate the instance
 
+### Launching an EC2 instance + VPN with a script
+Alternatively, you can launch an EC2 instance via the script `start-vpn.sh`.
+The script has some requirements that must be fulfilled for it to work properly:
+- [aws-cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- a [configured named profile](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-profiles.html) for your `aws-cli` enviroment
+- [jq](https://stedolan.github.io/jq/) installed
+- the ids of the security group and subnet created in the infra setup steps above
+
+The script was only tested on Ubuntu.
+
+1. Execute `./start-vpn.sh <desired AWS region> <local profile name> <the previously created subnet id> <the previously created security group id> <the secret key name> <the path to the secret key file>`
+2. The script will ask for some user inputs, in the form of consenting with `yes` or sudo access to install the required packages
+3. When done with spinning up the EC2 instance and with configuring the VPN, the script will hang
+4. Pressing CTRL+c will trigger its tear down function, that terminates the previously launched EC2 instance and turns off WireGuard
+ 
 ## References
 
-https://www.stavros.io/posts/how-to-configure-wireguard/ no ipv6
-
-https://www.ckn.io/blog/2017/11/14/wireguard-vpn-typical-setup/ dns no ubuntu 18 no ipv6
-
-https://dnns.no/wireguard-vpn-on-ubuntu-18.04.html no-dns
-
-https://docs.aws.amazon.com/vpc/latest/userguide/get-started-ipv6.html
+- https://www.stavros.io/posts/how-to-configure-wireguard/ no ipv6
+- https://www.ckn.io/blog/2017/11/14/wireguard-vpn-typical-setup/ dns no ubuntu 18 no ipv6
+- https://dnns.no/wireguard-vpn-on-ubuntu-18.04.html no-dns
+- https://docs.aws.amazon.com/vpc/latest/userguide/get-started-ipv6.html
